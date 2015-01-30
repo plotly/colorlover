@@ -29,7 +29,6 @@ All of the color scales in colorlover
 
 ```
 >>> import colorlover as cl
-
 >>> cl.scales['3']['div']['RdYlBu']
 
 ['rgb(252,141,89)', 'rgb(255,255,191)', 'rgb(145,191,219)']
@@ -58,6 +57,12 @@ Converts a string RGB or numeric RGB colorscale to HSL
 ### cl.to_rgb( scale )
 
 Convert an HSL or numeric RGB color scale to string RGB color scale
+
+```
+>>> cl.to_rgb( cl.scales['3']['div']['RdYlBu'] )
+
+['rgb(252,141,89)', 'rgb(255,255,191)', 'rgb(145,191,219)']
+```
 
 ### cl.to_html( scale )
 
