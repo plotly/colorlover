@@ -1,6 +1,8 @@
 # colorlover
 
-Color scales for IPython notebook
+Color scales for humans
+
+IPython notebook: http://nbviewer.ipython.org/gist/jackparmer/4696226c9b6b931bbdf6
 
 ```
 import colorlover as cl
