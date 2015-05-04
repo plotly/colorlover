@@ -1724,7 +1724,7 @@ def to_rgb( scale ):
     for ea in scale:
         h,s,l = [ float(x) for x in ea ]
         r,g,b = colorsys.hls_to_rgb(h/360.0, l/100.0, s/100.0)
-        r,g,b = [ str(int(round(x*255.0))) for x in r,g,b ]
+        r,g,b = [ str(int(round(x*255.0))) for x in (r,g,b) ]
         rgb_str = 'rgb(' + ', '.join([r,g,b]) + ')'
         rgb.append( rgb_str )
         
