@@ -21,6 +21,5 @@ dependencies:
     - "~/.pyenv/versions"  # attempt to just cache installed pyenv things
 test:
   override:
-
     # run test suite in all our python versions
     - bash circle/test.sh
