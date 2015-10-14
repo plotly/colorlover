@@ -14,15 +14,16 @@ class UsageTests(unittest.TestCase):
         scales = cl.to_numeric(cl.scales['3']['div']['RdYlBu'])
         self.assertEqual(
             scales,
-            [(252.0, 141.0, 89.0), (255.0, 255.0, 191.0), (145.0, 191.0, 219.0)]
+            [(252, 141, 89),
+             (255, 255, 191), (145, 191, 219)]
         )
 
     def test_to_hsl(self):
         scales = cl.to_hsl(cl.scales['3']['div']['RdYlBu'])
         self.assertEqual(
             scales,
-            ['hsl(19.0, 96.0%, 67.0%)', 'hsl(60.0, 100.0%, 87.0%)',
-             'hsl(203.0, 51.0%, 71.0%)']
+            ['hsl(19, 96%, 67%)', 'hsl(60, 100%, 87%)',
+             'hsl(203, 51%, 71%)']
         )
 
     def test_to_rgb(self):
