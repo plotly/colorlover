@@ -1747,15 +1747,15 @@ def to_html( scale ):
     
     def section_titles( k ):
         d = { 'qual':'Qualitative','div':'Diverging','seq':'Sequential' }
-        if k in d.keys():
+        if k in list(d.keys()):
             return '<h4>' + d[k] + '</h4>'
         return '<hr><h3>' + k + ' colors</h3>'
     
     def prettyprint( d ):
         global s
-        for k, v in d.iteritems():
+        for k, v in list(d.items()):
             if isinstance(v, dict):
-                if len(v.keys()) != 0:
+                if len(list(v.keys())) != 0:
                     s += section_titles(k)
                 prettyprint(v)
             else:
@@ -1773,8 +1773,8 @@ def flipper( scl=None ):
     ''' Invert color scale dictionary '''
     scl = scl if scl is not None else scales
     flipped = defaultdict(dict)
-    for key, val in scl.items():
-        for subkey, subval in val.items():
+    for key, val in list(scl.items()):
+        for subkey, subval in list(val.items()):
             flipped[subkey][key] = subval
     return flipped
 
