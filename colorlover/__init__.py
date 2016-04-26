@@ -1818,9 +1818,11 @@ def interp(scl, r):
         return (int(round(h*60,4)), int(round(s*100,4)), int(round(l*100,4)))
 
     for i in r:
-        c_i = int(i*math.floor(SCL_FI)/round(r[-1])) # start color index
+        # garyfeng: c_i could be rounded up so scl[c_i+1] will go off range
+        #c_i = int(i*math.floor(SCL_FI)/round(r[-1])) # start color index
+        c_i = int(math.floor(i*math.floor(SCL_FI)/round(r[-1]))) # start color index
         hsl_o = rgb_to_hsl( scl[c_i] ) # convert rgb to hls
-        hsl_f = rgb_to_hsl( scl[c_i+1] )
+        hsl_f = rgb_to_hsl( scl[c_i+1] ) if c_i < len(scl)-1 else hsl_o
         section_min = c_i*r[-1]/SCL_FI
         section_max = (c_i+1)*(r[-1]/SCL_FI)
         fraction = (i-section_min)/(section_max-section_min)
@@ -1828,6 +1830,3 @@ def interp(scl, r):
         c.append( 'hsl'+str(hsl) )
 
     return to_hsl( c )
-
-
-
