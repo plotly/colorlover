@@ -2,7 +2,7 @@
 
 Color scales for humans
 
-IPython notebook: http://nbviewer.ipython.org/gist/jackparmer/4696226c9b6b931bbdf6
+IPython notebook: https://plot.ly/ipython-notebooks/color-scales/
 
 ```
 import colorlover as cl
@@ -21,7 +21,7 @@ sudo pip install colorlover
 
 ## IPython notebook (demo)
 
-http://nbviewer.ipython.org/gist/jackparmer/4696226c9b6b931bbdf6
+https://plot.ly/ipython-notebooks/color-scales/
 
 ## Docs
 
