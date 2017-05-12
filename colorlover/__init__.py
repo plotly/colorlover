@@ -1784,7 +1784,12 @@ def interp(scl, r):
         HTML( to_html( to_hsl( interp( cl.scales['11']['qual']['Paired'], 5000 ) ) ) ) '''
     c = []
     SCL_FI = len(scl)-1 # final index of color scale
-    r = [x * 0.1 for x in range(r)] if isinstance( r, int ) else r
+    # garyfeng:
+    # the following line is buggy.
+    # r = [x * 0.1 for x in range(r)] if isinstance( r, int ) else r
+    r = [x*1.0*SCL_FI/r for x in range(r)] if isinstance( r, int ) else r
+    # end garyfeng
+
     scl = to_numeric( scl )
 
     def interp3(fraction, start, end):
@@ -1818,16 +1823,22 @@ def interp(scl, r):
         return (int(round(h*60,4)), int(round(s*100,4)), int(round(l*100,4)))
 
     for i in r:
-        c_i = int(i*math.floor(SCL_FI)/round(r[-1])) # start color index
+        # garyfeng: c_i could be rounded up so scl[c_i+1] will go off range
+        #c_i = int(i*math.floor(SCL_FI)/round(r[-1])) # start color index
+        #c_i = int(math.floor(i*math.floor(SCL_FI)/round(r[-1]))) # start color index
+        #c_i = if c_i < len(scl)-1 else hsl_o
+
+        c_i = int(math.floor(i))
+        section_min = math.floor(i)
+        section_max = math.ceil(i)
+        fraction = (i-section_min) #/(section_max-section_min)
+
         hsl_o = rgb_to_hsl( scl[c_i] ) # convert rgb to hls
         hsl_f = rgb_to_hsl( scl[c_i+1] )
-        section_min = c_i*r[-1]/SCL_FI
-        section_max = (c_i+1)*(r[-1]/SCL_FI)
-        fraction = (i-section_min)/(section_max-section_min)
+        #section_min = c_i*r[-1]/SCL_FI
+        #section_max = (c_i+1)*(r[-1]/SCL_FI)
+        #fraction = (i-section_min)/(section_max-section_min)
         hsl = interp3( fraction, hsl_o, hsl_f )
         c.append( 'hsl'+str(hsl) )
 
     return to_hsl( c )
-
-
-
