@@ -24,6 +24,7 @@ jobs:
           name: checkout https
           command: |
             git clone https://github.com/jackparmer/colorlover.git
+            cd colorlover
             git checkout ${CIRCLE_BRANCH}
       - run:
           name: install testing dependencies
