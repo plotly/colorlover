@@ -24,7 +24,7 @@ jobs:
           name: create env
           command: |
             conda create -y -n colorlover_env python=3.5 nose coverage
-            condea activate colorlover_env
+            conda activate colorlover_env
       - run:
           name: checkout / setup
           command: |
