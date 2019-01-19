@@ -1,4 +1,5 @@
-from distutils.core import setup
+from setuptools import setup
+
 setup(
   name = 'colorlover',
   packages = ['colorlover'], # this must be the same as the name above

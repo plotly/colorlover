@@ -1,0 +1,82 @@
+version: 2
+
+jobs:
+
+  python-2.7-core:
+    docker:
+    - image: continuumio/miniconda3:4.5.12
+      environment:
+        PYTHON_VERSION: 2.7
+
+    steps:
+      - run:
+          name: checkout project
+          command: |
+            git clone https://github.com/jackparmer/colorlover.git
+            cd colorlover
+            git checkout ${CIRCLE_BRANCH}
+      - run:
+          name: create environemnt
+          command:
+            colorlover/.circleci/create_env.sh
+      - run:
+          name: run tests and create coverage artifact
+          command: colorlover/.circleci/run_tests.sh
+      - store_artifacts:
+          path: artifacts/
+
+  python-3.4-core:
+    docker:
+    - image: continuumio/miniconda3:4.5.12
+      environment:
+        PYTHON_VERSION: 3.4
+
+    steps:
+      - run:
+          name: checkout project
+          command: |
+            git clone https://github.com/jackparmer/colorlover.git
+            cd colorlover
+            git checkout ${CIRCLE_BRANCH}
+      - run:
+          name: create environemnt
+          command:
+            colorlover/.circleci/create_env.sh
+      - run:
+          name: run tests and create coverage artifact
+          command: colorlover/.circleci/run_tests.sh
+      - store_artifacts:
+          path: artifacts/
+
+
+  python-3.7-core:
+    docker:
+    - image: continuumio/miniconda3:4.5.12
+      environment:
+        PYTHON_VERSION: 3.7
+        BUILD_COVERAGE_REPORT: 1
+
+    steps:
+      - run:
+          name: checkout project
+          command: |
+            git clone https://github.com/jackparmer/colorlover.git
+            cd colorlover
+            git checkout ${CIRCLE_BRANCH}
+      - run:
+          name: create environemnt
+          command:
+            colorlover/.circleci/create_env.sh
+      - run:
+          name: run tests and create coverage artifact
+          command: colorlover/.circleci/run_tests.sh
+      - store_artifacts:
+          path: artifacts/
+
+workflows:
+  version: 2
+  build:
+    jobs:
+      - python-2.7-core
+      - python-3.4-core
+      - python-3.7-core
