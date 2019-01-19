@@ -26,6 +26,9 @@ jobs:
           name: create environment
           command: |
             git clone https://github.com/jackparmer/colorlover.git
+            ls
+            ls colorlover
+            ls colorlover/.circleci
             colorlover/.circleci/create_env.sh
       - run:
           name: checkout and setup project
