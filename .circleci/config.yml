@@ -21,30 +21,25 @@ jobs:
 
     steps:
       - run:
-          name: checkout https
+          name: checkout / setup
           command: |
             git clone https://github.com/jackparmer/colorlover.git
             cd colorlover
             git checkout ${CIRCLE_BRANCH}
-      - run:
-          name: install testing dependencies
-          command: pip install --user nose coverage
-      - run:
-          name: install colorlover
-          command: |
-            pwd
+            pip install --user nose coverage
             pip install .
       - run:
           name: test install
           command: cd ~ && python -c "import colorlover"
       - run:
           name: run tests
-          command: nosetests -xv tests.py --with-coverage
+          command: nosetests -xv colorlover/tests.py --with-coverage
       - run:
           name: upload artifacts
           command: |
               mkdir artifacts/
-              coverage html -d artifacts
+              cd colorlover
+              coverage html -d ../artifacts
       - store_artifacts:
           path: artifacts
 
