@@ -35,9 +35,9 @@ jobs:
           command: nosetests -xv tests.py --with-coverage
       - run:
           name: upload artifacts
-          command:
-            - mkdir artifacts/
-            - coverage html -d "${CIRCLE_ARTIFACTS}/${PYENV_VERSION}" --title=${PYENV_VERSION}
+          command: |
+              mkdir artifacts/
+              coverage html -d "${CIRCLE_ARTIFACTS}/${PYENV_VERSION}" --title=${PYENV_VERSION}
       - store_artifacts:
           path: artifacts
 
