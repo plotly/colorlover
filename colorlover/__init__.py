@@ -1742,7 +1742,7 @@ def to_html( scale ):
             scale = to_rgb( scale )
         s_s = ''
         for ea in scale:
-             s_s+='<div style="background-color:{0};height:20px;width:20px;display:inline-block;"></div>'.format(ea)
+             s_s+='<div style="background-color:{0};height:20px;width:20px;margin-bottom:0px;display:inline-block;"></div>'.format(ea)
         return s_s
 
     def section_titles( k ):
