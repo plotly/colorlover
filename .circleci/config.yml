@@ -18,12 +18,14 @@ jobs:
   python-3.5-core:
     docker:
     - image: continuumio/miniconda3:4.5.12
+      environment:
+        PYTHON_VERSION: 3.5
 
     steps:
       - run:
           name: create env
           command: |
-            conda create -y -n colorlover_env python=3.5 nose coverage
+            conda create -y -n colorlover_env python=3.5 nose coverage zip
             source activate colorlover_env
 
             git clone https://github.com/jackparmer/colorlover.git
@@ -34,8 +36,8 @@ jobs:
             cd colorlover
             nosetests -xv tests.py --with-coverage
             mkdir ../artifacts/
-            coverage html -d ../artifacts
-            zip artifacts.zip artifacts/*
+            coverage html -d ./coverage
+            zip ../artifacts/coverage_$PYTHON_VERSION/zip coverage/*
       - store_artifacts:
           path: artifacts.zip
 
