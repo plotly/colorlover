@@ -30,7 +30,7 @@ jobs:
             cd colorlover
             git checkout ${CIRCLE_BRANCH}
             pip install -I .
-            cd ~ && python -c "import colorlover"
+            cd .. && python -c "import colorlover"
             nosetests -xv colorlover/tests.py --with-coverage
             mkdir artifacts/
             cd colorlover
