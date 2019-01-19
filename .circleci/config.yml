@@ -31,7 +31,8 @@ jobs:
             git checkout ${CIRCLE_BRANCH}
             pip install -I .
             cd .. && python -c "import colorlover"
-            nosetests -xv colorlover/tests.py --with-coverage
+            cd colorlover
+            nosetests -xv tests.py --with-coverage
             mkdir artifacts/
             cd colorlover
             coverage html -d ../artifacts
