@@ -26,6 +26,7 @@ jobs:
           name: checkout project
           command: |
             git clone https://github.com/jackparmer/colorlover.git
+            cd colorlover
             git checkout ${CIRCLE_BRANCH}
       - run:
           name: create environemnt
