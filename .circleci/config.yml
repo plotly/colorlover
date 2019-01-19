@@ -35,8 +35,9 @@ jobs:
             nosetests -xv tests.py --with-coverage
             mkdir ../artifacts/
             coverage html -d ../artifacts
+            zip artifacts.zip artifacts/*
       - store_artifacts:
-          path: artifacts
+          path: artifacts.zip
 
 #  python-3.7-core:
 #    docker:
