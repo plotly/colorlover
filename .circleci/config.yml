@@ -1,25 +1,12 @@
 version: 2
 
 jobs:
-  # Core
-  #  python-2.7-core:
-  #    docker:
-  #      - image: circleci/python:2.7-stretch-node-browsers
-  #
-  #    steps:
-  #      - checkout
-  #      - run:
-  #          name: install colorlover
-  #          command: pip install .
-  #      - run:
-  #          name: run tests
-  #          command: python -m unittest tests.py
 
-  python-3.5-core:
+  python-2.7-core:
     docker:
     - image: continuumio/miniconda3:4.5.12
       environment:
-        PYTHON_VERSION: 3.5
+        PYTHON_VERSION: 2.7
 
     steps:
       - run:
@@ -38,49 +25,57 @@ jobs:
       - store_artifacts:
           path: artifacts/
 
-#  python-3.5-core:
-#    docker:
-#    - image: continuumio/miniconda3:4.5.12
-#      environment:
-#        PYTHON_VERSION: 3.5
-#
-#    steps:
-#      - run:
-#          name: create env
-#          command: |
-#            conda create -y -n colorlover_env python=3.5 nose coverage zip
-#            source activate colorlover_env
-#
-#            git clone https://github.com/jackparmer/colorlover.git
-#            cd colorlover
-#            git checkout ${CIRCLE_BRANCH}
-#            pip install -I .
-#            cd .. && python -c "import colorlover"
-#            cd colorlover
-#            nosetests -xv tests.py --with-coverage
-#            mkdir ../artifacts/
-#            coverage html -d ./coverage
-#            zip ../artifacts/coverage_$PYTHON_VERSION.zip coverage/*
-#      - store_artifacts:
-#          path: artifacts/
+  python-3.4-core:
+    docker:
+    - image: continuumio/miniconda3:4.5.12
+      environment:
+        PYTHON_VERSION: 3.4
 
-#  python-3.7-core:
-#    docker:
-#    - image: circleci/python:3.7-stretch-node-browsers
-#
-#    steps:
-#      - checkout
-#      - run:
-#          name: install colorlover
-#          command: pip install .
-#      - run:
-#          name: run tests
-#          command: python -m unittest tests.py
+    steps:
+      - run:
+          name: checkout project
+          command: |
+            git clone https://github.com/jackparmer/colorlover.git
+            cd colorlover
+            git checkout ${CIRCLE_BRANCH}
+      - run:
+          name: create environemnt
+          command:
+            colorlover/.circleci/create_env.sh
+      - run:
+          name: run tests and create coverage artifact
+          command: colorlover/.circleci/run_tests.sh
+      - store_artifacts:
+          path: artifacts/
+
+
+  python-3.7-core:
+    docker:
+    - image: continuumio/miniconda3:4.5.12
+      environment:
+        PYTHON_VERSION: 3.7
+
+    steps:
+      - run:
+          name: checkout project
+          command: |
+            git clone https://github.com/jackparmer/colorlover.git
+            cd colorlover
+            git checkout ${CIRCLE_BRANCH}
+      - run:
+          name: create environemnt
+          command:
+            colorlover/.circleci/create_env.sh
+      - run:
+          name: run tests and create coverage artifact
+          command: colorlover/.circleci/run_tests.sh
+      - store_artifacts:
+          path: artifacts/
 
 workflows:
   version: 2
   build:
     jobs:
-#      - python-2.7-core
-      - python-3.5-core
-#      - python-3.7-core
+      - python-2.7-core
+      - python-3.4-core
+      - python-3.7-core
