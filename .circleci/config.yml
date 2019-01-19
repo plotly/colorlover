@@ -21,13 +21,17 @@ jobs:
 
     steps:
       - run:
+          name: create env
+          command: |
+            conda create -y -n colorlover_env python=3.5 nose coverage
+            condea activate colorlover_env
+      - run:
           name: checkout / setup
           command: |
             git clone https://github.com/jackparmer/colorlover.git
             cd colorlover
             git checkout ${CIRCLE_BRANCH}
-            pip install --user nose coverage
-            pip install .
+            pip install -I .
       - run:
           name: test install
           command: cd ~ && python -c "import colorlover"
