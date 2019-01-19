@@ -1810,7 +1810,6 @@ def interp(scl, r):
         HTML( to_html( to_hsl( interp( cl.scales['11']['qual']['Paired'], 5000 ) ) ) ) '''
     c = []
 
-    scl = to_numeric( scl )
     if isinstance(r, int):
         if r == 0:
             r_steps = []
@@ -1823,32 +1822,44 @@ def interp(scl, r):
     else:
         r_steps = r
 
-    def interp3(fraction, start, end):
+    scl = to_numeric(scl)
+
+    def hsl_interp(fraction, hsl_start, hsl_end):
         ''' Interpolate between values of 2, 3-member tuples '''
-        def intp(f, s, e):
-            return s + (e - s)*f
-        return tuple([intp(fraction, start[i], end[i]) for i in range(3)])
 
+        def interp_linear(f, s, e):
+            return s + (e - s) * f
 
-        return (int(round(h*60,4)), int(round(s*100,4)), int(round(l*100,4)))
+        def interp_circular(f, s, e):
+            s_mod = s % 360
+            e_mod = e % 360
+            if max(s_mod, e_mod) - min(s_mod, e_mod) > 180:
+                s_mod, e_mod = (s_mod + 360, e_mod) if s_mod < e_mod else (
+                s_mod, e_mod + 360)
+                return interp_linear(f, s_mod, e_mod) % 360
+            else:
+                return interp_linear(f, s_mod, e_mod)
+        return (
+            interp_circular(fraction, hsl_start[0], hsl_end[0]),
+            interp_circular(fraction, hsl_start[1], hsl_end[1]),
+            interp_circular(fraction, hsl_start[2], hsl_end[2]),
+        )
 
-        # garyfeng: c_i could be rounded up so scl[c_i+1] will go off range
-        #c_i = int(i*math.floor(SCL_FI)/round(r[-1])) # start color index
-        #c_i = int(math.floor(i*math.floor(SCL_FI)/round(r[-1]))) # start color index
-        #c_i = if c_i < len(scl)-1 else hsl_o
-
-        c_i = int(math.floor(i))
     for i in r_steps:
         section_min = math.floor(i)
         section_max = math.ceil(i)
-        fraction = (i-section_min) #/(section_max-section_min)
 
-        hsl_o = rgb_to_hsl( scl[c_i] ) # convert rgb to hls
-        hsl_f = rgb_to_hsl( scl[c_i+1] )
-        #section_min = c_i*r[-1]/SCL_FI
-        #section_max = (c_i+1)*(r[-1]/SCL_FI)
-        #fraction = (i-section_min)/(section_max-section_min)
-        hsl = interp3( fraction, hsl_o, hsl_f )
+        c_i_min = int(section_min)
+        c_i_max = int(section_max)
+
+        if c_i_min == c_i_max:
+            # No interpolation needed
+            hsl = rgb_to_hsl(scl[c_i_min])
+        else:
+            fraction = (i-section_min)
+            hsl_o = rgb_to_hsl( scl[c_i_min] ) # convert rgb to hls
+            hsl_f = rgb_to_hsl( scl[c_i_max] )
+            hsl = hsl_interp( fraction, hsl_o, hsl_f )
         c.append( 'hsl'+str(hsl) )
 
     return to_hsl( c )
