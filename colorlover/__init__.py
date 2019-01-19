@@ -1778,6 +1778,32 @@ def flipper( scl=None ):
             flipped[subkey][key] = subval
     return flipped
 
+
+def rgb_to_hsl(rgb):
+    ''' Adapted from M Bostock's RGB to HSL converter in d3.js
+        https://github.com/mbostock/d3/blob/master/src/color/rgb.js '''
+    r,g,b = float(rgb[0])/255.0,\
+            float(rgb[1])/255.0,\
+            float(rgb[2])/255.0
+    mx = max(r, g, b)
+    mn = min(r, g, b)
+    h = s = l = (mx + mn) / 2
+    if mx == mn: # achromatic
+        h = 0
+        s = 0 if l > 0 and l < 1 else h
+    else:
+        d = mx - mn;
+        s =  d / (mx + mn) if l < 0.5 else d / (2 - mx - mn)
+        if mx == r:
+            h = (g - b) / d + ( 6 if g < b else 0 )
+        elif mx == g:
+            h = (b - r) / d + 2
+        else:
+            h = (r - g) / d + 4
+
+    return (int(round(h*60,4)), int(round(s*100,4)), int(round(l*100,4)))
+
+
 def interp(scl, r):
     ''' Interpolate a color scale "scl" to a new one with length "r"
         Fun usage in IPython notebook:
@@ -1798,27 +1824,6 @@ def interp(scl, r):
             return s + (e - s)*f
         return tuple([intp(fraction, start[i], end[i]) for i in range(3)])
 
-    def rgb_to_hsl(rgb):
-        ''' Adapted from M Bostock's RGB to HSL converter in d3.js
-            https://github.com/mbostock/d3/blob/master/src/color/rgb.js '''
-        r,g,b = float(rgb[0])/255.0,\
-                float(rgb[1])/255.0,\
-                float(rgb[2])/255.0
-        mx = max(r, g, b)
-        mn = min(r, g, b)
-        h = s = l = (mx + mn) / 2
-        if mx == mn: # achromatic
-            h = 0
-            s = 0 if l > 0 and l < 1 else h
-        else:
-            d = mx - mn;
-            s =  d / (mx + mn) if l < 0.5 else d / (2 - mx - mn)
-            if mx == r:
-                h = (g - b) / d + ( 6 if g < b else 0 )
-            elif mx == g:
-                h = (b - r) / d + 2
-            else:
-                h = (r - g) / d + 4
 
         return (int(round(h*60,4)), int(round(s*100,4)), int(round(l*100,4)))
 
