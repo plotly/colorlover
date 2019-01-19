@@ -1818,7 +1818,7 @@ def interp(scl, r):
             elif mx == g:
                 h = (b - r) / d + 2
             else:
-                h = r - g / d + 4
+                h = (r - g) / d + 4
 
         return (int(round(h*60,4)), int(round(s*100,4)), int(round(l*100,4)))
 
