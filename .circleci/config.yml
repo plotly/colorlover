@@ -33,8 +33,7 @@ jobs:
             cd .. && python -c "import colorlover"
             cd colorlover
             nosetests -xv tests.py --with-coverage
-            mkdir artifacts/
-            cd colorlover
+            mkdir ../artifacts/
             coverage html -d ../artifacts
       - store_artifacts:
           path: artifacts
