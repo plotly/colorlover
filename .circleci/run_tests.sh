@@ -1,3 +1,4 @@
+source activate colorlover_env
 cd colorlover
 nosetests -xv tests.py --with-coverage
 mkdir ../artifacts/

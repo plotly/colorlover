@@ -23,16 +23,14 @@ jobs:
 
     steps:
       - run:
-          name: create environment
+          name: checkout project
           command: |
             git clone https://github.com/jackparmer/colorlover.git
-            ls
-            ls colorlover
-            ls colorlover/.circleci
-            colorlover/.circleci/create_env.sh
+            git checkout ${CIRCLE_BRANCH}
       - run:
-          name: checkout and setup project
-          command: colorlover/.circleci/checkout_setup.sh
+          name: create environemnt
+          command:
+            colorlover/.circleci/create_env.sh
       - run:
           name: run tests and create coverage artifact
           command: colorlover/.circleci/run_tests.sh
