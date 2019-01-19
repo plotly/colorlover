@@ -25,25 +25,16 @@ jobs:
           command: |
             conda create -y -n colorlover_env python=3.5 nose coverage
             source activate colorlover_env
-      - run:
-          name: checkout / setup
-          command: |
+
             git clone https://github.com/jackparmer/colorlover.git
             cd colorlover
             git checkout ${CIRCLE_BRANCH}
             pip install -I .
-      - run:
-          name: test install
-          command: cd ~ && python -c "import colorlover"
-      - run:
-          name: run tests
-          command: nosetests -xv colorlover/tests.py --with-coverage
-      - run:
-          name: upload artifacts
-          command: |
-              mkdir artifacts/
-              cd colorlover
-              coverage html -d ../artifacts
+            cd ~ && python -c "import colorlover"
+            nosetests -xv colorlover/tests.py --with-coverage
+            mkdir artifacts/
+            cd colorlover
+            coverage html -d ../artifacts
       - store_artifacts:
           path: artifacts
 
