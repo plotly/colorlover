@@ -24,13 +24,13 @@ jobs:
     steps:
       - run:
           name: create environment
-          command: ./create_env.sh
+          command: ./.circleci/create_env.sh
       - run:
           name: checkout and setup project
-          command: ./checkout_setup.sh
+          command: ./.circleci/checkout_setup.sh
       - run:
           name: run tests and create coverage artifact
-          command: ./run_tests.sh
+          command: ./.circleci/run_tests.sh
       - store_artifacts:
           path: artifacts/
 
