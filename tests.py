@@ -38,11 +38,11 @@ class UsageTests(unittest.TestCase):
         self.assertEqual(
             html,
             ('<div style="background-color:rgb(252,141,89);'
-             'height:20px;width:20px;display:inline-block;"></div>'
+             'height:20px;width:20px;margin-bottom:0px;display:inline-block;"></div>'
              '<div style="background-color:rgb(255,255,191);'
-             'height:20px;width:20px;display:inline-block;"></div>'
+             'height:20px;width:20px;margin-bottom:0px;display:inline-block;"></div>'
              '<div style="background-color:rgb(145,191,219);'
-             'height:20px;width:20px;display:inline-block;"></div>')
+             'height:20px;width:20px;margin-bottom:0px;display:inline-block;"></div>')
         )
 
     def test_flipper(self):
