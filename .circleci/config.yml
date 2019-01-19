@@ -1,0 +1,63 @@
+version: 2
+
+jobs:
+  # Core
+#  python-2.7-core:
+#    docker:
+#      - image: circleci/python:2.7-stretch-node-browsers
+#
+#    steps:
+#      - checkout
+#      - run:
+#          name: install colorlover
+#          command: pip install .
+#      - run:
+#          name: run tests
+#          command: python -m unittest tests.py
+
+  python-3.5-core:
+    docker:
+    - image: circleci/python:3.5-stretch-node-browsers
+
+    steps:
+      - checkout
+      - run:
+          name: install testing dependencies
+          command: pip install nose coverage
+      - run:
+          name: install colorlover
+          command: pip install .
+      - run:
+          name: test install
+          command: cd ~ && python -c "import colorlover"
+      - run:
+          name: run tests
+          command: nosetests -xv tests.py --with-coverage
+      - run:
+          name: upload artifacts
+          command:
+            - mkdir artifacts/
+            - coverage html -d "${CIRCLE_ARTIFACTS}/${PYENV_VERSION}" --title=${PYENV_VERSION}
+      - store_artifacts:
+          path: artifacts
+
+#  python-3.7-core:
+#    docker:
+#    - image: circleci/python:3.7-stretch-node-browsers
+#
+#    steps:
+#      - checkout
+#      - run:
+#          name: install colorlover
+#          command: pip install .
+#      - run:
+#          name: run tests
+#          command: python -m unittest tests.py
+
+workflows:
+  version: 2
+  build:
+    jobs:
+#      - python-2.7-core
+      - python-3.5-core
+#      - python-3.7-core
