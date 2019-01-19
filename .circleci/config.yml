@@ -39,7 +39,7 @@ jobs:
             coverage html -d ./coverage
             zip ../artifacts/coverage_$PYTHON_VERSION coverage/*
       - store_artifacts:
-          path: artifacts.zip
+          path: artifacts/
 
 #  python-3.7-core:
 #    docker:
