@@ -20,7 +20,11 @@ jobs:
     - image: circleci/python:3.5-stretch-node-browsers
 
     steps:
-      - checkout
+      - run:
+          name: checkout https
+          command: |
+            git clone https://github.com/jackparmer/colorlover.git
+            git checkout ${CIRCLE_BRANCH}
       - run:
           name: install testing dependencies
           command: pip install nose coverage
@@ -37,7 +41,7 @@ jobs:
           name: upload artifacts
           command: |
               mkdir artifacts/
-              coverage html -d "${CIRCLE_ARTIFACTS}/${PYENV_VERSION}" --title=${PYENV_VERSION}
+              coverage html -d artifacts
       - store_artifacts:
           path: artifacts
 
