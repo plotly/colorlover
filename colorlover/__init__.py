@@ -1,6 +1,14 @@
 import colorsys
 from collections import defaultdict
 import math
+import re
+
+try:
+  import numpy as np
+  NUMPY_IMPORTED = True
+except ImportError:
+  NUMPY_IMPORTED = False
+
 
 scales = {'10': {'div': {'BrBG': ['rgb(84,48,5)',
     'rgb(140,81,10)',
@@ -1778,7 +1786,7 @@ def flipper( scl=None ):
             flipped[subkey][key] = subval
     return flipped
 
-def interp(scl, r):
+def old_interp(scl, r):
     ''' Interpolate a color scale "scl" to a new one with length "r"
         Fun usage in IPython notebook:
         HTML( to_html( to_hsl( interp( cl.scales['11']['qual']['Paired'], 5000 ) ) ) ) '''
@@ -1842,3 +1850,103 @@ def interp(scl, r):
         c.append( 'hsl'+str(hsl) )
 
     return to_hsl( c )
+old_interp.Legacy = True
+
+def new_interp(scl, r):
+    ''' Interpolate a color scale "scl" to a new one with length "r"
+        Fun usage in IPython notebook:
+        HTML( to_html( to_hsl( interp( cl.scales['11']['qual']['Paired'], 5000 ) ) ) ) '''
+
+    # This is not the strictly shortest algorithm, but it's the most principled:
+    # 1. Local RGB => XYZ => Desired Colorspace (in the case L*a*b*)
+    # 2. Linear operations in L*a*b*, which are perceptually uniform
+    # 3. L*a*b* => XYZ => Local RGB
+    # The local RGB is assumed sRGB, to avoid messing up with color management
+    colors = to_rgb(scl)
+    colors_list = [ re.search(r'rgb\(([0-9]+),([0-9]+),([0-9]+)\)', c).groups() for c in colors ]
+    colors_array = np.asarray([ [ float(p) for p in c ] for c in colors_list ])
+
+    # Conversion from RGB (assumed sRGB) to XYZ
+    # https://en.wikipedia.org/wiki/SRGB#The_reverse_transformation
+    Scale = 255.0
+    srgb = colors_array/Scale
+    srgb_thres = 0.04045
+    srgb_linear = np.empty(srgb.shape)
+    srgb_linear[srgb<=srgb_thres] = (srgb/12.92)[srgb<=srgb_thres]
+    srgb_linear[srgb>srgb_thres] = np.power(((srgb+0.055)/1.055),2.4)[srgb>srgb_thres]
+    srgb2xyz = np.asarray([ [ 0.4124, 0.3576, 0.1805 ],
+                            [ 0.2126, 0.7152, 0.0722 ],
+                            [ 0.0193, 0.1192, 0.9505 ] ])
+    xyz = srgb_linear.dot(srgb2xyz.T)
+
+    # Conversion from XYZ to L*a*b*
+    # https://en.wikipedia.org/wiki/Lab_color_space#Forward_transformation
+    # http://www.brucelindbloom.com/Math.html
+    Lab_thresh = 216.0/24389.0
+    Lab_kappa = 24389.0/27.0
+    def xyz2lab(t):
+        t2 = np.empty(t.shape)
+        cond = t<=Lab_thresh
+        t2[cond] = (Lab_kappa*t+16.0)[cond]
+        t2[np.logical_not(cond)] = np.power(t,(1.0/3.0))[np.logical_not(cond)]
+        return t2
+
+    White_D65 = np.asarray([ 0.95047, 1.00000, 1.08883 ])
+    xyz_ratio = xyz/White_D65
+
+    pre_lab = xyz2lab(xyz_ratio)
+    ell = 116.0*pre_lab[:,1] - 16.0
+    a   = 500.0*(pre_lab[:,0]-pre_lab[:,1])
+    b   = 200.0*(pre_lab[:,1]-pre_lab[:,2])
+
+    # Interpolate colors in the perceptually uniform L*a*b* space
+    originals = np.arange(ell.shape[0])
+    interpolated = np.linspace(originals[0], originals[-1], num=r)
+    ell_interp = np.interp(interpolated, originals, ell)
+    a_interp   = np.interp(interpolated, originals, a)
+    b_interp   = np.interp(interpolated, originals, b)
+
+    # Conversion from L*a*b* to XYZ
+    # https://en.wikipedia.org/wiki/Lab_color_space#Reverse_transformation
+    # http://www.brucelindbloom.com/Math.html
+    def lab2xyz(t):
+        t2 = np.empty(t.shape)
+        cond = t<=Lab_thresh
+        t2[cond] = ((t-16.0)/Lab_kappa)[cond]
+        t2[np.logical_not(cond)] = np.power(t,3.0)[np.logical_not(cond)]
+        return t2
+
+    ell_interp_scaled = (ell_interp+16.0)/116.0
+    a_interp_scaled = a_interp/500.0
+    b_interp_scaled = b_interp/200.0
+    pre_x_interp = lab2xyz(ell_interp_scaled+a_interp_scaled)
+    pre_y_interp = lab2xyz(ell_interp_scaled)
+    pre_z_interp = lab2xyz(ell_interp_scaled-b_interp_scaled)
+    pre_xyz_interp = np.asarray([pre_x_interp, pre_y_interp, pre_z_interp]).T
+    xyz_interp = pre_xyz_interp*White_D65
+
+    # Conversion from XYZ to RGB (assumed sRGB)
+    # https://en.wikipedia.org/wiki/SRGB#The_forward_transformation_.28CIE_XYZ_to_sRGB.29
+    xyz2srgb = np.asarray([ [  3.2406, -1.5372, -0.4986 ],
+                            [ -0.9689,  1.8758,  0.0415 ],
+                            [  0.0557, -0.2040,  1.0570 ] ])
+    srgb_linear_interp = xyz_interp.dot(xyz2srgb.T)
+    srgb_interp = np.empty(srgb_linear_interp.shape)
+
+    srgb_interp[srgb_linear_interp<=0.0031308] = (12.92*srgb_linear_interp)[srgb_linear_interp<=0.0031308]
+    srgb_interp[srgb_linear_interp>0.0031308] = ((1.055)*np.power(srgb_linear_interp,(1.0/2.4)) - 0.055)[srgb_linear_interp>0.0031308]
+    srgb_interp[srgb_interp<0.0] = 0.0
+    srgb_interp[srgb_interp>1.0] = 1.0
+    srgb_device_interp = np.round(srgb_interp*Scale)
+
+    # This --- finally --- is the desired output
+    colors_interpolated = [ 'rgb(%d,%d,%d)' % tuple(c) for c in srgb_device_interp ]
+
+    # Keeps output in HSL for backwards compatibility, but this loses gamut
+    return to_hsl(colors_interpolated)
+new_interp.Legacy = False
+
+if NUMPY_IMPORTED:
+    interp = new_interp
+else:
+    interp = old_interp
