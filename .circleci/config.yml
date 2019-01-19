@@ -2,18 +2,18 @@ version: 2
 
 jobs:
   # Core
-#  python-2.7-core:
-#    docker:
-#      - image: circleci/python:2.7-stretch-node-browsers
-#
-#    steps:
-#      - checkout
-#      - run:
-#          name: install colorlover
-#          command: pip install .
-#      - run:
-#          name: run tests
-#          command: python -m unittest tests.py
+  #  python-2.7-core:
+  #    docker:
+  #      - image: circleci/python:2.7-stretch-node-browsers
+  #
+  #    steps:
+  #      - checkout
+  #      - run:
+  #          name: install colorlover
+  #          command: pip install .
+  #      - run:
+  #          name: run tests
+  #          command: python -m unittest tests.py
 
   python-3.5-core:
     docker:
@@ -28,7 +28,7 @@ jobs:
       - run:
           name: checkout and setup project
           command: ./checkout_setup.sh
-    - run:
+      - run:
           name: run tests and create coverage artifact
           command: ./run_tests.sh
       - store_artifacts:
