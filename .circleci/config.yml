@@ -17,7 +17,7 @@ jobs:
 
   python-3.5-core:
     docker:
-    - image: circleci/python:3.5-stretch-node-browsers
+    - image: continuumio/miniconda3:4.5.4
 
     steps:
       - run:
@@ -31,7 +31,9 @@ jobs:
           command: pip install --user nose coverage
       - run:
           name: install colorlover
-          command: pip install --user .
+          command: |
+            pwd
+            pip install .
       - run:
           name: test install
           command: cd ~ && python -c "import colorlover"
