@@ -3,7 +3,7 @@ from setuptools import setup
 setup(
   name = 'colorlover',
   packages = ['colorlover'], # this must be the same as the name above
-  version = '0.2.1',
+  version = '0.3.0',
   description = 'Color scales for IPython notebook',
   author = 'Jack Parmer',
   author_email = 'jack@plot.ly',
