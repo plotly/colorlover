@@ -9,5 +9,10 @@ setup(
   author_email = 'jack@plot.ly',
   url = 'https://github.com/jackparmer/colorlover', # use the URL to the github repo
   keywords = ['ipython notebook','color scales'], # arbitrary keywords
-  classifiers = [],
+  classifiers = [
+    # https://pypi.org/pypi?%3Aaction=list_classifiers
+    'Programming Language :: Python',
+    'Programming Language :: Python :: 2',
+    'Programming Language :: Python :: 3',
+  ],
 )
