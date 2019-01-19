@@ -1,0 +1,38 @@
+{% set data = load_setup_py_data() %}
+{% set version = data.get('version') %}
+
+package:
+  name: plotly
+  version: {{ version }}
+
+source:
+  path: ../
+
+build:
+  number: 0
+  script: "{{ PYTHON }} -m pip install . --no-deps --ignore-installed --no-cache-dir -q"
+
+requirements:
+  build:
+    - python
+    - pip
+
+  run:
+    - python
+
+test:
+  imports:
+    - colorlover
+
+about:
+  home: https://github.com/jackparmer/colorlover
+  license: MIT
+  license_file: '{{ environ["RECIPE_DIR"] }}/LICENSE.txt'
+  summary: 'Color scales for humans'
+  description: |
+  doc_url: https://plot.ly/ipython-notebooks/color-scales/
+  dev_url: https://github.com/jackparmer/colorlover
+
+extra:
+  recipe-maintainers:
+    - jonmmease
