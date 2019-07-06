@@ -1639,6 +1639,8 @@ def scale_type( scale ):
         return s_t
     elif isinstance(swatch,tuple) and len(swatch) == 3:
         return 'numeric'
+    elif swatch[0] == '#' and len(swatch) == 7:
+        return 'hex'
     raise Exception('Could not determine type of input colorscale.\n\
 Colorscales must be in one of these 3 forms:\n\
 [ (255, 255, 255), (255, 255, 255), (255, 255, 255) ]\n\
@@ -1698,6 +1700,22 @@ def to_hsl( scale ):
         hsl.append( hsl_str )
 
     return hsl
+
+def to_hex( scale ):
+    ''' convert an hsl, numeric or rgb color to string hex color. ie,
+        [ "hsl(360,100,100)", "hsl(360,100,100)", "hsl(360,100,100)" ] -->
+        [ "#FFFFFF", "#FFFFFF", "#FFFFFF" ]
+        '''
+    s_t = scale_type(scale)
+
+    if s_t == 'hex':
+        return scale
+    elif s_t == 'numeric':
+        return ['#%02x%02x%02x' % tuple(map(int, s)) for s in to_numeric( scale )]
+    elif s_t == 'rgb':
+        return ['#%02x%02x%02x' % tuple(map(int, s)) for s in to_numeric( scale )]
+    elif s_t == 'hsl':
+        return ['#%02x%02x%02x' % tuple(map(int, s)) for s in to_numeric(scale)]
 
 def to_rgb( scale ):
     ''' convert an hsl or numeric rgb color scale to string rgb color scale. ie,
