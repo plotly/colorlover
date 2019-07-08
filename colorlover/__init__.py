@@ -1631,6 +1631,9 @@ scales = {'10': {'div': {'BrBG': ['rgb(84,48,5)',
     'rgb(128,0,38)']}}}
 
 def get_scale(scale_type='qual', scale_seq='Accent', length=5):
+    """return the corresponding scale without using dictionnary directly. Raise error if wrong argument
+    is givent and print available argument.
+    """
     try:
         assert str(length) in scales.keys()
         try:
