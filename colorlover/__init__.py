@@ -1630,6 +1630,27 @@ scales = {'10': {'div': {'BrBG': ['rgb(84,48,5)',
     'rgb(189,0,38)',
     'rgb(128,0,38)']}}}
 
+def get_scale(scale_type='qual', scale_seq='Accent', length=5):
+    """return the corresponding scale without using dictionnary directly. Raise error if wrong argument
+    is givent and print available argument.
+    """
+    try:
+        assert str(length) in scales.keys()
+        try:
+            assert scale_type in scales[str(length)].keys()
+            try:
+                assert scale_seq in scales[str(length)][scale_type].keys()
+                return scales[str(length)][scale_type][scale_seq]
+
+            except AssertionError:
+                print('get_scale error : scale_type must be one of the following strings {}'.format(
+                    list(scales[str(length)][scale_type].keys())))
+        except AssertionError:
+            print('get_scale error : scale_seq must be one of the following strings {}'.format(
+                list(scales[str(length)].keys())))
+    except AssertionError:
+        print('get_scale error : length must be an integer comprised between 3 and 12')
+
 def scale_type( scale ):
     ''' returns "rbg", "hsl", "numeric", or raises exception. ie,
         [ "rgb(255, 255, 255)", "rgb(255, 255, 255)", "rgb(255, 255, 255)" ] --> "rgb" '''

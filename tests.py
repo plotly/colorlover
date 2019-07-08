@@ -31,6 +31,12 @@ class UsageTests(unittest.TestCase):
             scales,
             ['rgb(252,141,89)', 'rgb(255,255,191)', 'rgb(145,191,219)'])
 
+    def test_get_scales(self):
+        scales = cl.get_scale(scale_type='div', scale_seq='RdYlBu', length=3)
+        self.assertEqual(
+            scales,
+            ['rgb(252,141,89)', 'rgb(255,255,191)', 'rgb(145,191,219)'])
+
     def test_to_numeric(self):
         scales = cl.to_numeric(cl.scales['3']['div']['RdYlBu'])
         self.assertEqual(
