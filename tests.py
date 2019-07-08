@@ -23,15 +23,21 @@ rgb_hsl_colors = {
             (20, 30, 128): 	(234, 72, 29)  # Near navy
 }
 
-test_colors = {
-    'rgb': ['rgb(252, 141, 89)', 'rgb(255, 255, 191)', 'rgb(145, 191, 219)'],
-    'hsl': ['hsl(19,96,67)', 'hsl(60,100,87)','hsl(203,51,71)'],
-    'hex': ['#fc8d59', '#ffffbf', '#91bfdb'],
-    'numeric': [(252, 141, 89), (255, 255, 191), (145, 191, 219)],
-}
-
 
 class UsageTests(unittest.TestCase):
+    def test_scale_type(self):
+        test_colors = {'rgb': ['rgb(252, 141, 89)', 'rgb(255, 255, 191)', 'rgb(145, 191, 219)'],
+                       'hsl': ['hsl(19,96,67)', 'hsl(60,100,87)', 'hsl(203,51,71)'],
+                       'hex': ['#fc8d59', '#ffffbf', '#91bfdb'],
+                       'numeric': [(252, 141, 89), (255, 255, 191), (145, 191, 219)],
+                       }
+
+        for type_scale, scale in test_colors.items():
+            self.assertEqual(
+                cl.scale_type(test_colors.get(type_scale)),
+                type_scale
+            )
+
     def test_scales(self):
         scales = cl.scales['3']['div']['RdYlBu']
         self.assertEqual(
@@ -50,7 +56,7 @@ class UsageTests(unittest.TestCase):
         scales = cl.to_hex(cl.scales['3']['div']['RdYlBu'])
         self.assertEqual(
             scales,
-            test_colors.get('hex')
+            ['#fc8d59', '#ffffbf', '#91bfdb']
         )
 
     def test_to_hsl(self):
