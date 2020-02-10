@@ -2,6 +2,7 @@ from setuptools import setup
 
 setup(
   name = 'colorlover',
+  license = 'MIT License',
   packages = ['colorlover'], # this must be the same as the name above
   version = '0.3.0',
   description = 'Color scales for IPython notebook',
