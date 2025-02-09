@@ -43,6 +43,16 @@ All of the color scales in colorlover
 ['rgb(252,141,89)', 'rgb(255,255,191)', 'rgb(145,191,219)']
 ```
 
+### cl.get_scale( scale_type='qual', scale_seq='Accent', length=5 )
+
+Get scales using method instead of dictionary.
+
+```
+>>> cl.get_scale('qual', 'div', 3)
+
+['rgb(127,201,127)', 'rgb(190,174,212)', 'rgb(253,192,134)']
+```
+
 ### cl.to_numeric( scale ) 
 
 Converts scale of RGB or HSL strings to list of tuples with RGB integer values
