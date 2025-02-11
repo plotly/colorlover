@@ -45,7 +45,7 @@ All of the color scales in colorlover
 
 ### cl.to_numeric( scale ) 
 
-Converts scale of RGB or HSL strings to list of tuples with RGB integer values
+Converts scale of HEX, RGB or HSL strings to list of tuples with RGB integer values
 
 ```
 >>> cl.to_numeric( cl.scales['3']['div']['RdYlBu'] )
@@ -55,7 +55,7 @@ Converts scale of RGB or HSL strings to list of tuples with RGB integer values
 
 ### cl.to_hsl( scale ) 
 
-Converts a string RGB or numeric RGB colorscale to HSL
+Converts a string RGB, HEX or numeric RGB colorscale to HSL
 
 ```
 >>> cl.to_hsl( cl.scales['3']['div']['RdYlBu'] )
@@ -65,12 +65,22 @@ Converts a string RGB or numeric RGB colorscale to HSL
 
 ### cl.to_rgb( scale )
 
-Convert an HSL or numeric RGB color scale to string RGB color scale
+Convert an HSL, HEX or numeric RGB color scale to string RGB color scale
 
 ```
 >>> cl.to_rgb( cl.scales['3']['div']['RdYlBu'] )
 
 ['rgb(252,141,89)', 'rgb(255,255,191)', 'rgb(145,191,219)']
+```
+
+### cl.to_hex( scale )
+
+Converts an HSL, string RGB, numeric RGB colorscale to HEX
+
+```
+>>> cl.to_rgb( cl.scales['3']['div']['RdYlBu'] )
+
+[''#fc8d59', '#ffffbf', '#91bfdb']
 ```
 
 ### cl.to_html( scale )
